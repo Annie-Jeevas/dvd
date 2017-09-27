@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by anya on 14.09.2017.
  */
-@Service
+
 public interface UserService {
     public List<User> getAllUsers();
 
