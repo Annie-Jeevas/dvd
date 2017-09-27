@@ -5,7 +5,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaQuery;
 import java.util.List;
@@ -15,17 +14,15 @@ import java.util.List;
  */
 @Log
 @Repository
-@Transactional()
+@Transactional
 public class CommonDaoImpl<T> implements CommonDao<T> {
 
     private Class<T> entityClass;
 
     @PersistenceContext
     private EntityManager em;
-//    = Persistence.createEntityManagerFactory(
-//            "dvdPU").createEntityManager();
 
-    public CommonDaoImpl(Class<T> entityClass) {
+    public CommonDaoImpl(Class entityClass) {
         this.entityClass = entityClass;
         log.info(this.getClass().toString() + entityClass + " was created");
     }

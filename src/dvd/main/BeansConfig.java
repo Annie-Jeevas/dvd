@@ -1,8 +1,11 @@
 package dvd.main;
 
+import dvd.main.dao.CommonDao;
 import dvd.main.dao.CommonDaoImpl;
 import dvd.main.entities.Disk;
 import dvd.main.entities.User;
+import dvd.main.services.UserService;
+import dvd.main.services.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,43 +23,48 @@ import javax.sql.DataSource;
  */
 @Configuration
 public class BeansConfig {
+
+
     @Bean
-    public CommonDaoImpl<User> userDao(){
-        return new CommonDaoImpl<User>(User.class);
-    }
-    @Bean
-    public CommonDaoImpl<Disk> diskDao(){
+    public CommonDao<Disk> diskDao() {
         return new CommonDaoImpl<Disk>(Disk.class);
     }
-
-    @Autowired
-    private DataSource dataSource;
-
+    @Bean
+    public CommonDao<User> userDao() {
+        return new CommonDaoImpl<User>(User.class);
+    }
     @Bean(name = "entityManagerFactory")
-    public LocalContainerEntityManagerFactoryBean emf() {
+    public LocalContainerEntityManagerFactoryBean emf(DataSource dataSource) {
         LocalContainerEntityManagerFactoryBean emf =
                 new LocalContainerEntityManagerFactoryBean();
         emf.setDataSource(dataSource);
         emf.setPackagesToScan(
-                new String[] {"dvd.main"});
+                new String[]{"dvd.main"});
         emf.setJpaVendorAdapter(
                 new HibernateJpaVendorAdapter());
         return emf;
     }
 
     @Bean
-    public DataSource dataSource(){
+    public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
         dataSource.setUrl("jdbc:mysql://localhost:3306/dvd");
-        dataSource.setUsername( "root" );
-        dataSource.setPassword( "root" );
+        dataSource.setUsername("root");
+        dataSource.setPassword("root");
         return dataSource;
     }
+
     @Bean
-    public PlatformTransactionManager transactionManager(EntityManagerFactory emf){
+    public PlatformTransactionManager transactionManager(EntityManagerFactory emf) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(emf);
         return transactionManager;
     }
+
+    @Bean
+    public UserService userService() {
+        return new UserServiceImpl();
+    }
+
 }
